@@ -23,7 +23,7 @@ function getInitials(name: string): string {
 function AvatarSmall({ user }: { user: UserResponse | null }) {
   if (!user)
     return (
-      <span className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-[var(--color-surface-2)] text-[var(--color-text-3)] text-[11px]">
+      <span className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-surface-2 text-text-3 text-[11px]">
         —
       </span>
     );
@@ -32,7 +32,7 @@ function AvatarSmall({ user }: { user: UserResponse | null }) {
   }
   return (
     <span
-      className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-[var(--color-primary-light)] text-[var(--color-primary)] text-[10px] font-bold shrink-0"
+      className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-primary-light text-(--color-primary) text-[10px] font-bold shrink-0"
       title={user.full_name}
     >
       {getInitials(user.full_name)}
@@ -151,53 +151,53 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
 
   return (
     <div className="relative" ref={containerRef}>
-      {label && <label className="block text-xs font-semibold text-[var(--color-text-2)] mb-1">{label}</label>}
+      {label && <label className="block text-xs font-semibold text-text-2 mb-1">{label}</label>}
       <button
         type="button"
-        className="flex items-center gap-2 w-full px-2.5 py-2 border-[1.5px] border-[var(--color-border)] rounded-lg bg-white cursor-pointer text-left hover:border-[var(--color-border-focus)] transition-colors"
+        className="flex items-center gap-2 w-full px-2.5 py-2 border-[1.5px] border-border rounded-lg bg-white cursor-pointer text-left hover:border-(--color-border-focus) transition-colors"
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
       >
         <AvatarSmall user={selectedUser} />
-        <span className="flex-1 text-sm text-[var(--color-text-1)] truncate">
+        <span className="flex-1 text-sm text-text-1 truncate">
           {selectedUser ? selectedUser.full_name : placeholder}
         </span>
-        <svg className="shrink-0 text-[var(--color-text-3)]" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+        <svg className="shrink-0 text-text-3" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
           <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
         </svg>
       </button>
 
       {open && (
         <div
-          className="absolute top-[calc(100%+4px)] left-0 right-0 bg-white border-[1.5px] border-[var(--color-border)] rounded-xl shadow-lg z-[200] overflow-hidden"
+          className="absolute top-[calc(100%+4px)] left-0 right-0 bg-white border-[1.5px] border-border rounded-xl shadow-lg z-200 overflow-hidden"
           role="listbox"
         >
           {!showCreate ? (
             <>
-              <div className="px-2 py-1.5 border-b border-[var(--color-border)]">
+              <div className="px-2 py-1.5 border-b border-border">
                 <input
                   autoFocus
                   type="text"
                   placeholder="Search users…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-[var(--color-border)] focus:border-[var(--color-border-focus)] rounded-lg bg-white outline-none placeholder:text-[var(--color-text-3)]"
+                  className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg bg-white outline-none placeholder:text-text-3"
                 />
               </div>
 
-              <div className="max-h-[200px] overflow-y-auto p-1" ref={userListRef}>
+              <div className="max-h-50 overflow-y-auto p-1" ref={userListRef}>
                 <button
                   type="button"
-                  className="flex items-center gap-2 w-full px-2.5 py-1.5 text-left border-none rounded-lg bg-transparent cursor-pointer hover:bg-[var(--color-surface-2)] transition-colors text-sm text-[var(--color-text-3)]"
+                  className="flex items-center gap-2 w-full px-2.5 py-1.5 text-left border-none rounded-lg bg-transparent cursor-pointer hover:bg-surface-2 transition-colors text-sm text-text-3"
                   onClick={() => handleSelect(null)}
                 >
-                  <span className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-[var(--color-surface-2)] text-[var(--color-text-3)] text-[11px]">—</span>
+                  <span className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-surface-2 text-text-3 text-[11px]">—</span>
                   <span>None</span>
                 </button>
 
                 {loading ? (
-                  <div className="px-3 py-2 text-xs text-[var(--color-text-3)]">Loading…</div>
+                  <div className="px-3 py-2 text-xs text-text-3">Loading…</div>
                 ) : (
                   users.map((u) => (
                     <button
@@ -205,31 +205,31 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
                       type="button"
                       className={`flex items-center gap-2 w-full px-2.5 py-1.5 text-left border-none rounded-lg cursor-pointer transition-colors text-sm ${
                         value === u.id
-                          ? 'bg-[var(--color-primary-light)] text-[var(--color-primary)]'
-                          : 'bg-transparent hover:bg-[var(--color-surface-2)] text-[var(--color-text-1)]'
+                          ? 'bg-primary-light text-(--color-primary)'
+                          : 'bg-transparent hover:bg-surface-2 text-text-1'
                       }`}
                       onClick={() => handleSelect(u.id)}
                     >
                       <AvatarSmall user={u} />
                       <span className="flex-1 truncate font-medium">{u.full_name}</span>
-                      <span className="text-[11px] text-[var(--color-text-3)] shrink-0">@{u.username}</span>
+                      <span className="text-[11px] text-text-3 shrink-0">@{u.username}</span>
                     </button>
                   ))
                 )}
 
                 {!loading && users.length === 0 && (
-                  <div className="px-3 py-2 text-xs text-[var(--color-text-3)]">No users found</div>
+                  <div className="px-3 py-2 text-xs text-text-3">No users found</div>
                 )}
                 {loadingMoreUsers && (
-                  <div className="px-3 py-2 text-xs text-[var(--color-text-3)]">Loading…</div>
+                  <div className="px-3 py-2 text-xs text-text-3">Loading…</div>
                 )}
                 {hasMoreUsers && <div ref={userSentinelRef} className="h-px" />}
               </div>
 
-              <div className="px-2 py-1.5 border-t border-[var(--color-border)]">
+              <div className="px-2 py-1.5 border-t border-border">
                 <button
                   type="button"
-                  className="w-full px-2.5 py-1.5 text-xs font-semibold text-[var(--color-primary)] hover:bg-[var(--color-primary-light)] rounded-lg transition-colors text-left"
+                  className="w-full px-2.5 py-1.5 text-xs font-semibold text-(--color-primary) hover:bg-primary-light rounded-lg transition-colors text-left"
                   onClick={() => setShowCreate(true)}
                 >
                   + Create new user
@@ -241,13 +241,13 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
               <div className="flex items-center gap-2 mb-1">
                 <button
                   type="button"
-                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[var(--color-surface-2)] text-[var(--color-text-2)] transition-colors"
+                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-surface-2 text-text-2 transition-colors"
                   onClick={() => setShowCreate(false)}
                   aria-label="Back"
                 >
                   ←
                 </button>
-                <span className="text-sm font-semibold text-[var(--color-text-1)]">New User</span>
+                <span className="text-sm font-semibold text-text-1">New User</span>
               </div>
               {createError && (
                 <div className="px-2.5 py-1.5 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700">
@@ -260,7 +260,7 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
                 placeholder="Full name *"
                 value={createForm.full_name}
                 onChange={(e) => setCreateForm((f: CreateUserPayload) => ({ ...f, full_name: e.target.value }))}
-                className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-[var(--color-border)] focus:border-[var(--color-border-focus)] rounded-lg bg-white outline-none placeholder:text-[var(--color-text-3)]"
+                className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg bg-white outline-none placeholder:text-text-3"
                 minLength={1}
                 maxLength={100}
               />
@@ -270,7 +270,7 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
                 placeholder="Username * (letters, numbers, _ . -)"
                 value={createForm.username}
                 onChange={(e) => setCreateForm((f: CreateUserPayload) => ({ ...f, username: e.target.value }))}
-                className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-[var(--color-border)] focus:border-[var(--color-border-focus)] rounded-lg bg-white outline-none placeholder:text-[var(--color-text-3)]"
+                className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg bg-white outline-none placeholder:text-text-3"
                 minLength={3}
                 maxLength={50}
                 pattern="^[a-zA-Z0-9_.\-]+"
@@ -281,19 +281,19 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
                 placeholder="Email *"
                 value={createForm.email}
                 onChange={(e) => setCreateForm((f: CreateUserPayload) => ({ ...f, email: e.target.value }))}
-                className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-[var(--color-border)] focus:border-[var(--color-border-focus)] rounded-lg bg-white outline-none placeholder:text-[var(--color-text-3)]"
+                className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg bg-white outline-none placeholder:text-text-3"
               />
               <input
                 type="url"
                 placeholder="Avatar URL (optional)"
                 value={createForm.avatar_url ?? ''}
                 onChange={(e) => setCreateForm((f: CreateUserPayload) => ({ ...f, avatar_url: e.target.value }))}
-                className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-[var(--color-border)] focus:border-[var(--color-border-focus)] rounded-lg bg-white outline-none placeholder:text-[var(--color-text-3)]"
+                className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg bg-white outline-none placeholder:text-text-3"
                 maxLength={500}
               />
               <button
                 type="submit"
-                className="px-3 py-1.5 rounded-lg text-sm font-semibold bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1.5 rounded-lg text-sm font-semibold bg-(--color-primary) text-white hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={creating}
               >
                 {creating ? 'Creating…' : 'Create User'}

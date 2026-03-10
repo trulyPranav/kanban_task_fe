@@ -141,10 +141,10 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
   return (
     <div className="flex flex-col gap-4">
       {/* Title */}
-      <h4 className="flex items-center text-xs font-bold text-[var(--color-text-2)] uppercase tracking-widest">
+      <h4 className="flex items-center text-xs font-bold text-text-2 uppercase tracking-widest">
         Comments
         {comments.length > 0 && (
-          <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[11px] font-bold bg-[var(--color-primary-light)] text-[var(--color-primary)] ml-1.5">
+          <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full text-[11px] font-bold bg-primary-light text-(--color-primary) ml-1.5">
             {comments.length}
           </span>
         )}
@@ -157,9 +157,9 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
       )}
 
       {loading ? (
-        <div className="w-6 h-6 rounded-full border-[2.5px] border-[var(--color-border)] border-t-[var(--color-primary)] animate-spin-fast mx-auto my-4" />
+        <div className="w-6 h-6 rounded-full border-[2.5px] border-border border-t-(--color-primary) animate-spin-fast mx-auto my-4" />
       ) : comments.length === 0 ? (
-        <p className="text-sm text-[var(--color-text-3)] py-2">No comments yet. Be the first!</p>
+        <p className="text-sm text-text-3 py-2">No comments yet. Be the first!</p>
       ) : (
         <div className="flex flex-col gap-3">
           {comments.map((c) => (
@@ -173,7 +173,7 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
                     className="w-7 h-7 rounded-full object-cover"
                   />
                 ) : (
-                  <span className="w-7 h-7 rounded-full inline-flex items-center justify-center bg-[var(--color-primary-light)] text-[var(--color-primary)] text-[10px] font-bold">
+                  <span className="w-7 h-7 rounded-full inline-flex items-center justify-center bg-primary-light text-(--color-primary) text-[10px] font-bold">
                     {c.author ? getInitials(c.author.full_name) : '?'}
                   </span>
                 )}
@@ -181,14 +181,14 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
               {/* Body */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                  <span className="text-xs font-semibold text-[var(--color-text-1)]">
+                  <span className="text-xs font-semibold text-text-1">
                     {c.author?.full_name ?? 'Deleted user'}
                   </span>
-                  <span className="text-[11px] text-[var(--color-text-3)]">{formatTime(c.created_at)}</span>
+                  <span className="text-[11px] text-text-3">{formatTime(c.created_at)}</span>
                   {currentUser && c.user_id === currentUser.id && (
                     <div className="flex items-center gap-1 ml-auto">
                       <button
-                        className="bg-transparent border-none cursor-pointer text-[11px] text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] p-0"
+                        className="bg-transparent border-none cursor-pointer text-[11px] text-(--color-primary) hover:text-primary-hover p-0"
                         onClick={() => {
                           setEditingId(c.id);
                           setEditContent(c.content);
@@ -208,7 +208,7 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
                 {editingId === c.id ? (
                   <div className="flex flex-col gap-1.5">
                     <textarea
-                      className="w-full px-3 py-2 border-[1.5px] border-[var(--color-border)] focus:border-[var(--color-border-focus)] rounded-lg text-sm bg-white outline-none resize-y placeholder:text-[var(--color-text-3)]"
+                      className="w-full px-3 py-2 border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg text-sm bg-white outline-none resize-y placeholder:text-text-3"
                       value={editContent}
                       onChange={(e) => setEditContent(e.target.value)}
                       rows={3}
@@ -216,13 +216,13 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
                     />
                     <div className="flex gap-1.5">
                       <button
-                        className="px-3 py-1 rounded-lg text-xs font-semibold bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] transition-colors"
+                        className="px-3 py-1 rounded-lg text-xs font-semibold bg-(--color-primary) text-white hover:bg-primary-hover transition-colors"
                         onClick={() => handleEditSave(c.id)}
                       >
                         Save
                       </button>
                       <button
-                        className="px-3 py-1 rounded-lg text-xs font-semibold border border-[var(--color-border)] text-[var(--color-text-2)] hover:bg-[var(--color-surface-2)] transition-colors"
+                        className="px-3 py-1 rounded-lg text-xs font-semibold border border-border text-text-2 hover:bg-surface-2 transition-colors"
                         onClick={() => setEditingId(null)}
                       >
                         Cancel
@@ -230,14 +230,14 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
                     </div>
                   </div>
                 ) : (
-                  <p className="text-sm text-[var(--color-text-1)] whitespace-pre-wrap break-words">{c.content}</p>
+                  <p className="text-sm text-text-1 whitespace-pre-wrap wrap-break-word">{c.content}</p>
                 )}
               </div>
             </div>
           ))}
           {loadingMore && (
             <div className="flex justify-center py-2">
-              <div className="w-5 h-5 rounded-full border-[2.5px] border-[var(--color-border)] border-t-[var(--color-primary)] animate-spin-fast" />
+              <div className="w-5 h-5 rounded-full border-[2.5px] border-border border-t-(--color-primary) animate-spin-fast" />
             </div>
           )}
           {hasMore && <div ref={sentinelRef} className="h-px" />}
@@ -250,14 +250,14 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
           {currentUser?.avatar_url ? (
             <img src={currentUser.avatar_url} alt={currentUser.full_name} className="w-7 h-7 rounded-full object-cover" />
           ) : (
-            <span className="w-7 h-7 rounded-full inline-flex items-center justify-center bg-[var(--color-primary-light)] text-[var(--color-primary)] text-[10px] font-bold">
+            <span className="w-7 h-7 rounded-full inline-flex items-center justify-center bg-primary-light text-(--color-primary) text-[10px] font-bold">
               {currentUser ? getInitials(currentUser.full_name) : '?'}
             </span>
           )}
         </div>
         <div className="flex-1 flex flex-col gap-1.5">
           <textarea
-            className="w-full px-3 py-2 border-[1.5px] border-[var(--color-border)] focus:border-[var(--color-border-focus)] rounded-lg text-sm bg-white outline-none resize-y placeholder:text-[var(--color-text-3)] disabled:opacity-60"
+            className="w-full px-3 py-2 border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg text-sm bg-white outline-none resize-y placeholder:text-text-3 disabled:opacity-60"
             placeholder={currentUser ? 'Write a comment…' : 'Select a user to comment'}
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
@@ -266,10 +266,10 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
             disabled={!currentUser}
           />
           <div className="flex items-center justify-between">
-            <span className="text-[11px] text-[var(--color-text-3)]">{newContent.length}/2000</span>
+            <span className="text-[11px] text-text-3">{newContent.length}/2000</span>
             <button
               type="submit"
-              className="px-3 py-1 rounded-lg text-xs font-semibold bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1 rounded-lg text-xs font-semibold bg-(--color-primary) text-white hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={submitting || !newContent.trim() || !currentUser}
             >
               {submitting ? 'Posting…' : 'Comment'}
