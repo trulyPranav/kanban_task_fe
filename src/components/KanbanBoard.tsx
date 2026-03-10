@@ -255,30 +255,30 @@ export default function KanbanBoard() {
     setShowUserPicker(false);
   };
 
-  const totalTasks = tasks.todo.length + tasks.in_progress.length + tasks.done.length;
-
   return (
-    <div className="kanban-board-wrapper">
+    <div className="flex flex-col min-h-0 flex-1">
       {/* ── Header ── */}
-      <header className="app-header">
-        <div className="app-header__left">
-          <span className="app-header__logo">📋</span>
-          <h1 className="app-header__title">TaskFlow</h1>
-          <span className="app-header__count">{overallTotal} task{totalTasks !== 1 ? 's' : ''}</span>
+      <header className="flex items-center gap-4 px-6 py-3 bg-white border-b border-[var(--color-border)] shadow-xs sticky top-0 z-50">
+        <div className="flex items-center gap-2.5 shrink-0">
+          <span className="text-2xl">📋</span>
+          <h1 className="text-lg font-extrabold text-[var(--color-text-1)]">Kanban-Task</h1>
+          <span className="text-xs text-[var(--color-text-3)] px-2 py-0.5 bg-[var(--color-surface-2)] rounded-full">
+            {overallTotal} task{overallTotal !== 1 ? 's' : ''}
+          </span>
         </div>
-        <div className="app-header__center">
-          <div className="search-box">
-            <span className="search-box__icon">🔍</span>
+        <div className="flex-1 flex justify-center">
+          <div className="flex items-center gap-2 bg-[var(--color-surface-2)] border-[1.5px] border-[var(--color-border)] focus-within:border-[var(--color-border-focus)] rounded-full px-3.5 py-1.5 max-w-sm w-full transition-colors">
+            <span className="text-sm text-[var(--color-text-3)] shrink-0">🔍</span>
             <input
               type="search"
-              className="search-box__input"
+              className="border-none bg-transparent outline-none text-sm text-[var(--color-text-1)] flex-1 min-w-0 placeholder:text-[var(--color-text-3)]"
               placeholder="Search tasks…"
               value={search}
               onChange={(e) => handleSearchChange(e.target.value)}
             />
             {search && (
               <button
-                className="search-box__clear"
+                className="border-none bg-none cursor-pointer text-[var(--color-text-3)] text-xs p-0"
                 onClick={() => handleSearchChange('')}
                 aria-label="Clear search"
               >
@@ -287,16 +287,16 @@ export default function KanbanBoard() {
             )}
           </div>
         </div>
-        <div className="app-header__right">
+        <div className="flex items-center gap-3 shrink-0">
           <button
-            className="btn btn--primary btn--sm"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border-[1.5px] border-[var(--color-primary)] bg-[var(--color-primary)] text-white text-xs font-semibold cursor-pointer transition-all hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]"
             onClick={() => openCreate('todo')}
           >
             + New Task
           </button>
-          <div className="current-user-wrap">
+          <div className="relative">
             {showUserPicker ? (
-              <div className="current-user-picker">
+              <div className="absolute right-0 top-[calc(100%+8px)] bg-white border-[1.5px] border-[var(--color-border)] rounded-xl shadow-lg p-3 min-w-[280px] z-[100]">
                 <UserSelector
                   value={currentUser?.id ?? null}
                   onChange={handleCurrentUserChange}
@@ -306,22 +306,22 @@ export default function KanbanBoard() {
               </div>
             ) : (
               <button
-                className="current-user-btn"
+                className="flex items-center gap-2 px-2.5 py-1.5 pl-1.5 border-[1.5px] border-[var(--color-border)] rounded-full bg-white cursor-pointer text-sm text-[var(--color-text-1)] transition-all hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-light)]"
                 onClick={() => setShowUserPicker(true)}
                 title={currentUser ? `Signed in as ${currentUser.full_name}` : 'Select user'}
               >
                 {currentUser ? (
                   currentUser.avatar_url ? (
-                    <img src={currentUser.avatar_url} alt={currentUser.full_name} className="avatar" />
+                    <img src={currentUser.avatar_url} alt={currentUser.full_name} className="w-7 h-7 rounded-full object-cover" />
                   ) : (
-                    <span className="avatar avatar--initials">
+                    <span className="w-7 h-7 rounded-full inline-flex items-center justify-center bg-[var(--color-primary-light)] text-[var(--color-primary)] text-[10px] font-bold">
                       {getInitials(currentUser.full_name)}
                     </span>
                   )
                 ) : (
-                  <span className="avatar avatar--empty" title="No user selected">👤</span>
+                  <span className="w-7 h-7 rounded-full inline-flex items-center justify-center bg-[var(--color-surface-2)] text-[var(--color-text-3)]" title="No user selected">👤</span>
                 )}
-                <span className="current-user-btn__name">
+                <span className="text-xs font-medium max-w-[120px] overflow-hidden text-ellipsis whitespace-nowrap">
                   {currentUser ? currentUser.full_name : 'Select user'}
                 </span>
               </button>
@@ -332,9 +332,12 @@ export default function KanbanBoard() {
 
       {/* ── Error banner ── */}
       {error && (
-        <div className="board-error">
+        <div className="flex items-center justify-between gap-3 px-6 py-2.5 bg-[var(--color-danger-light)] text-[var(--color-danger)] border-b border-red-300 text-sm">
           <span>{error}</span>
-          <button className="btn-text" onClick={() => { setError(''); fetchAll(search); }}>
+          <button
+            className="bg-none border-none cursor-pointer text-sm text-[var(--color-primary)] hover:text-[var(--color-primary-hover)]"
+            onClick={() => { setError(''); fetchAll(search); }}
+          >
             Retry
           </button>
         </div>
@@ -347,7 +350,7 @@ export default function KanbanBoard() {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <main className="kanban-board">
+        <main className="flex gap-4 px-6 py-5 overflow-x-auto flex-1 items-start board-scroll">
           {COLUMNS.map((col) => (
             <KanbanColumn
               key={col.status}

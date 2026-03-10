@@ -1,73 +1,92 @@
-/* ─────────────────────────────────────────────
-   CSS Custom Properties & Reset
-───────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+@import "tailwindcss";
 
-:root {
-  /* Surface */
-  --bg: #f0f4f8;
-  --surface: #ffffff;
-  --surface-2: #f8fafc;
+@theme {
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f46e5;
+  --color-primary-light: #eef2ff;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-danger-light: #fee2e2;
+  --color-bg: #f0f4f8;
+  --color-surface: #ffffff;
+  --color-surface-2: #f8fafc;
+  --color-border: #e2e8f0;
+  --color-border-focus: #6366f1;
+  --color-text-1: #1e293b;
+  --color-text-2: #475569;
+  --color-text-3: #94a3b8;
+  --color-prio-low: #10b981;
+  --color-prio-low-bg: #d1fae5;
+  --color-prio-low-text: #065f46;
+  --color-prio-med: #f59e0b;
+  --color-prio-med-bg: #fef3c7;
+  --color-prio-med-text: #78350f;
+  --color-prio-high: #ef4444;
+  --color-prio-high-bg: #fee2e2;
+  --color-prio-high-text: #7f1d1d;
+  --color-status-todo: #64748b;
+  --color-status-todo-bg: #f1f5f9;
+  --color-status-progress: #3b82f6;
+  --color-status-progress-bg: #eff6ff;
+  --color-status-done: #10b981;
+  --color-status-done-bg: #ecfdf5;
+}
 
-  /* Border */
-  --border: #e2e8f0;
-  --border-focus: #6366f1;
+*, *::before, *::after { box-sizing: border-box; }
 
-  /* Text */
-  --text-1: #1e293b;
-  --text-2: #475569;
-  --text-3: #94a3b8;
-
-  /* Brand */
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --primary-light: #eef2ff;
-
-  /* Danger */
-  --danger: #ef4444;
-  --danger-hover: #dc2626;
-  --danger-light: #fee2e2;
-
-  /* Priority */
-  --prio-low: #10b981;
-  --prio-low-bg: #d1fae5;
-  --prio-low-text: #065f46;
-  --prio-med: #f59e0b;
-  --prio-med-bg: #fef3c7;
-  --prio-med-text: #78350f;
-  --prio-high: #ef4444;
-  --prio-high-bg: #fee2e2;
-  --prio-high-text: #7f1d1d;
-
-  /* Status */
-  --status-todo: #64748b;
-  --status-todo-bg: #f1f5f9;
-  --status-progress: #3b82f6;
-  --status-progress-bg: #eff6ff;
-  --status-done: #10b981;
-  --status-done-bg: #ecfdf5;
-
-  /* Shadow */
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
-  --shadow: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
-  --shadow-lg: 0 10px 25px rgba(0,0,0,0.12), 0 4px 10px rgba(0,0,0,0.06);
-  --shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
-
-  /* Misc */
-  --radius-sm: 4px;
-  --radius: 8px;
-  --radius-lg: 12px;
-  --radius-full: 9999px;
-  --transition: 150ms ease;
-
+html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--text-1);
-  background: var(--bg);
   -webkit-font-smoothing: antialiased;
 }
 
-body { margin: 0; min-height: 100vh; background: var(--bg); }
-#root { min-height: 100vh; display: flex; flex-direction: column; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text-1);
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollbar styles for column task list */
+.tasks-scroll::-webkit-scrollbar { width: 4px; }
+.tasks-scroll::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 9999px; }
+
+/* Board horizontal scroll */
+.board-scroll::-webkit-scrollbar { height: 8px; }
+.board-scroll::-webkit-scrollbar-track { background: transparent; }
+.board-scroll::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 9999px; }
+
+/* Animations */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.97) translateY(6px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.animate-spin-fast { animation: spin 0.7s linear infinite; }
+.animate-backdrop  { animation: backdrop-in 0.15s ease; }
+.animate-modal     { animation: modal-in 0.18s ease; }
+
+/* line-clamp utilities not in core v4 yet */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* select custom arrow */
+.select-arrow {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 32px;
+}
+

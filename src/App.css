@@ -1,6 +1,5 @@
-/* ─────────────────────────────────────────────
-   Utilities / Atoms
-───────────────────────────────────────────── */
+/* Styles moved to Tailwind utility classes in component files */
+
 .badge {
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 20px; height: 20px; padding: 0 6px;

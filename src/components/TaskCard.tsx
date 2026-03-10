@@ -8,6 +8,18 @@ interface TaskCardProps {
   isDragOverlay?: boolean;
 }
 
+const PRIORITY_BADGE: Record<TaskPriority, string> = {
+  low:    'bg-[var(--color-prio-low-bg)] text-[var(--color-prio-low-text)]',
+  medium: 'bg-[var(--color-prio-med-bg)] text-[var(--color-prio-med-text)]',
+  high:   'bg-[var(--color-prio-high-bg)] text-[var(--color-prio-high-text)]',
+};
+
+const PRIORITY_BORDER: Record<TaskPriority, string> = {
+  low:    'border-l-[var(--color-prio-low)]',
+  medium: 'border-l-[var(--color-prio-med)]',
+  high:   'border-l-[var(--color-prio-high)]',
+};
+
 const PRIORITY_LABEL: Record<TaskPriority, string> = {
   low: 'Low',
   medium: 'Med',
@@ -44,46 +56,46 @@ function CardContent({ task }: { task: TaskResponse }) {
   const dueInfo = formatDueDate(task.due_date);
   return (
     <>
-      <div className="task-card__top">
-        <span className={`priority-badge priority-badge--${task.priority}`}>
+      <div className="flex items-center justify-between gap-1.5">
+        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide ${PRIORITY_BADGE[task.priority]}`}>
           {PRIORITY_LABEL[task.priority]}
         </span>
         {task.due_date && dueInfo && (
-          <span className={`task-card__due${dueInfo.overdue ? ' task-card__due--overdue' : ''}`}>
+          <span className={`text-[11px] whitespace-nowrap ${dueInfo.overdue ? 'text-[var(--color-danger)] font-semibold' : 'text-[var(--color-text-2)]'}`}>
             📅 {dueInfo.text}
           </span>
         )}
       </div>
 
-      <h3 className="task-card__title">{task.title}</h3>
+      <h3 className="text-[13px] font-semibold text-[var(--color-text-1)] leading-snug line-clamp-2">{task.title}</h3>
 
       {task.description && (
-        <p className="task-card__desc">{task.description}</p>
+        <p className="text-xs text-[var(--color-text-2)] leading-relaxed line-clamp-2">{task.description}</p>
       )}
 
-      <div className="task-card__footer">
-        <div className="task-card__assignee">
+      <div className="flex items-center justify-between gap-2 mt-0.5">
+        <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
           {task.assignee ? (
             <>
               {task.assignee.avatar_url ? (
                 <img
                   src={task.assignee.avatar_url}
                   alt={task.assignee.full_name}
-                  className="avatar avatar--xs"
+                  className="w-[22px] h-[22px] rounded-full object-cover shrink-0"
                 />
               ) : (
-                <span className="avatar avatar--xs avatar--initials">
+                <span className="w-[22px] h-[22px] rounded-full inline-flex items-center justify-center bg-[var(--color-primary-light)] text-[var(--color-primary)] text-[9px] font-bold shrink-0">
                   {getInitials(task.assignee.full_name)}
                 </span>
               )}
-              <span className="task-card__assignee-name">{task.assignee.full_name}</span>
+              <span className="text-[11px] text-[var(--color-text-2)] whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px]">{task.assignee.full_name}</span>
             </>
           ) : (
-            <span className="task-card__unassigned">Unassigned</span>
+            <span className="text-[11px] text-[var(--color-text-3)] italic">Unassigned</span>
           )}
         </div>
         {task.comment_count > 0 && (
-          <span className="task-card__comments">
+          <span className="text-[11px] text-[var(--color-text-3)] whitespace-nowrap shrink-0">
             💬 {task.comment_count}
           </span>
         )}
@@ -94,7 +106,7 @@ function CardContent({ task }: { task: TaskResponse }) {
 
 export function TaskCardOverlay({ task }: { task: TaskResponse }) {
   return (
-    <div className={`task-card task-card--priority-${task.priority} task-card--overlay`}>
+    <div className={`bg-white rounded-lg p-3 border-[1.5px] border-l-[3px] border-[var(--color-border)] ${PRIORITY_BORDER[task.priority]} shadow-xl cursor-grabbing flex flex-col gap-2 rotate-2 opacity-100`}>
       <CardContent task={task} />
     </div>
   );
@@ -115,7 +127,7 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`task-card task-card--priority-${task.priority}${isDragging ? ' task-card--dragging' : ''}`}
+      className={`bg-white rounded-lg p-3 border-[1.5px] border-l-[3px] border-[var(--color-border)] ${PRIORITY_BORDER[task.priority]} shadow-xs cursor-grab active:cursor-grabbing flex flex-col gap-2 select-none transition-shadow hover:shadow-md hover:-translate-y-px${isDragging ? ' opacity-40 shadow-none' : ''}`}
       onClick={() => !isDragging && onClick(task)}
       {...listeners}
       {...attributes}
