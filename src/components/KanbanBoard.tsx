@@ -65,7 +65,7 @@ export default function KanbanBoard() {
   const [showUserPicker, setShowUserPicker] = useState(false);
 
   // Chart panel
-  const [chartOpen, setChartOpen] = useState(false);
+  const [chartOpen, setChartOpen] = useState(true);
 
   // Drag state
   const [activeTask, setActiveTask] = useState<TaskResponse | null>(null);
@@ -416,7 +416,7 @@ export default function KanbanBoard() {
 
         {/* Chart sidebar */}
         {chartOpen && (
-          <aside className="w-85 shrink-0 border-l border-(--color-border) bg-white flex flex-col p-5 overflow-y-auto">
+          <aside className="w-1/3 shrink-0 border-l border-(--color-border) bg-white flex flex-col p-5 overflow-y-auto">
             <TaskChart tasks={tasks} />
           </aside>
         )}
