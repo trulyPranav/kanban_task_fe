@@ -286,11 +286,11 @@ export default function KanbanBoard() {
               <path d="M10.5 10.5L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
             <input
-              type="search"
+              type="text"
               className="border-none bg-transparent outline-none text-[13px] text-[var(--color-text-1)] flex-1 min-w-0 placeholder:text-[var(--color-text-3)]"
               placeholder="Search tasks…"
               value={search}
-              onChange={(e) => handleSearchChange(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value.trim())}
             />
             {search && (
               <button
