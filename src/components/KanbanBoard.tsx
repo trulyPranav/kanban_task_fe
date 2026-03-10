@@ -258,27 +258,43 @@ export default function KanbanBoard() {
   return (
     <div className="flex flex-col min-h-0 flex-1">
       {/* ── Header ── */}
-      <header className="flex items-center gap-4 px-6 py-3 bg-white border-b border-[var(--color-border)] shadow-xs sticky top-0 z-50">
-        <div className="flex items-center gap-2.5 shrink-0">
-          <span className="text-2xl">📋</span>
-          <h1 className="text-lg font-extrabold text-[var(--color-text-1)]">Kanban-Task</h1>
-          <span className="text-xs text-[var(--color-text-3)] px-2 py-0.5 bg-[var(--color-surface-2)] rounded-full">
-            {overallTotal} task{overallTotal !== 1 ? 's' : ''}
+      <header className="flex items-center gap-5 px-6 h-14 bg-white border-b border-[var(--color-border)] sticky top-0 z-50 shrink-0">
+        {/* Wordmark */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="w-7 h-7 rounded-lg bg-[var(--color-text-1)] flex items-center justify-center shrink-0">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="1" y="1" width="5" height="5" rx="1" fill="white" opacity="0.9"/>
+              <rect x="8" y="1" width="5" height="5" rx="1" fill="white" opacity="0.55"/>
+              <rect x="1" y="8" width="5" height="5" rx="1" fill="white" opacity="0.55"/>
+              <rect x="8" y="8" width="5" height="5" rx="1" fill="white" opacity="0.3"/>
+            </svg>
+          </div>
+          <span className="text-sm font-semibold tracking-tight text-[var(--color-text-1)]">Tasks</span>
+          <span className="text-[11px] text-[var(--color-text-3)] tabular-nums">
+            {overallTotal}
           </span>
         </div>
+
+        {/* Divider */}
+        <div className="w-px h-5 bg-[var(--color-border)] shrink-0" />
+
+        {/* Search */}
         <div className="flex-1 flex justify-center">
-          <div className="flex items-center gap-2 bg-[var(--color-surface-2)] border-[1.5px] border-[var(--color-border)] focus-within:border-[var(--color-border-focus)] rounded-full px-3.5 py-1.5 max-w-sm w-full transition-colors">
-            <span className="text-sm text-[var(--color-text-3)] shrink-0">🔍</span>
+          <div className="flex items-center gap-2 border border-[var(--color-border)] focus-within:border-[var(--color-border-focus)] focus-within:shadow-[0_0_0_3px_rgba(99,102,241,0.08)] rounded-lg px-3 py-2 max-w-xs w-full transition-all bg-white">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" className="shrink-0 text-[var(--color-text-3)]">
+              <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M10.5 10.5L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
             <input
               type="search"
-              className="border-none bg-transparent outline-none text-sm text-[var(--color-text-1)] flex-1 min-w-0 placeholder:text-[var(--color-text-3)]"
+              className="border-none bg-transparent outline-none text-[13px] text-[var(--color-text-1)] flex-1 min-w-0 placeholder:text-[var(--color-text-3)]"
               placeholder="Search tasks…"
               value={search}
               onChange={(e) => handleSearchChange(e.target.value)}
             />
             {search && (
               <button
-                className="border-none bg-none cursor-pointer text-[var(--color-text-3)] text-xs p-0"
+                className="border-none bg-transparent cursor-pointer text-[var(--color-text-3)] hover:text-[var(--color-text-2)] p-0 leading-none text-xs transition-colors"
                 onClick={() => handleSearchChange('')}
                 aria-label="Clear search"
               >
@@ -287,42 +303,47 @@ export default function KanbanBoard() {
             )}
           </div>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
+
+        {/* Actions */}
+        <div className="flex items-center gap-2 shrink-0">
           <button
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border-[1.5px] border-[var(--color-primary)] bg-[var(--color-primary)] text-white text-xs font-semibold cursor-pointer transition-all hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]"
+            className="inline-flex items-center justify-center gap-1.5 h-8 px-3.5 rounded-lg bg-[var(--color-text-1)] text-white text-[12px] font-medium cursor-pointer transition-colors hover:bg-[var(--color-primary-hover)]"
             onClick={() => openCreate('todo')}
           >
-            + New Task
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+            New Task
           </button>
           <div className="relative">
             {showUserPicker ? (
-              <div className="absolute right-0 top-[calc(100%+8px)] bg-white border-[1.5px] border-[var(--color-border)] rounded-xl shadow-lg p-3 min-w-[280px] z-[100]">
+              <div className="absolute right-0 top-[calc(100%+8px)] bg-white border border-[var(--color-border)] rounded-xl shadow-lg shadow-black/5 p-4 min-w-[280px] z-[100]">
                 <UserSelector
                   value={currentUser?.id ?? null}
                   onChange={handleCurrentUserChange}
                   placeholder="Select your user"
-                  label="You are logged in as"
+                  label="Signed in as"
                 />
               </div>
             ) : (
               <button
-                className="flex items-center gap-2 px-2.5 py-1.5 pl-1.5 border-[1.5px] border-[var(--color-border)] rounded-full bg-white cursor-pointer text-sm text-[var(--color-text-1)] transition-all hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-light)]"
+                className="flex items-center gap-2 h-8 pl-1 pr-3 border border-[var(--color-border)] rounded-lg bg-white cursor-pointer text-[13px] text-[var(--color-text-1)] transition-all hover:border-[var(--color-border-focus)] hover:shadow-[0_0_0_3px_rgba(99,102,241,0.08)]"
                 onClick={() => setShowUserPicker(true)}
                 title={currentUser ? `Signed in as ${currentUser.full_name}` : 'Select user'}
               >
                 {currentUser ? (
                   currentUser.avatar_url ? (
-                    <img src={currentUser.avatar_url} alt={currentUser.full_name} className="w-7 h-7 rounded-full object-cover" />
+                    <img src={currentUser.avatar_url} alt={currentUser.full_name} className="w-6 h-6 rounded-full object-cover" />
                   ) : (
-                    <span className="w-7 h-7 rounded-full inline-flex items-center justify-center bg-[var(--color-primary-light)] text-[var(--color-primary)] text-[10px] font-bold">
+                    <span className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-[var(--color-surface-2)] text-[var(--color-text-2)] text-[10px] font-semibold">
                       {getInitials(currentUser.full_name)}
                     </span>
                   )
                 ) : (
-                  <span className="w-7 h-7 rounded-full inline-flex items-center justify-center bg-[var(--color-surface-2)] text-[var(--color-text-3)]" title="No user selected">👤</span>
+                  <span className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-[var(--color-surface-2)]">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="var(--color-text-3)" strokeWidth="1.5"/><path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="var(--color-text-3)" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                  </span>
                 )}
-                <span className="text-xs font-medium max-w-[120px] overflow-hidden text-ellipsis whitespace-nowrap">
-                  {currentUser ? currentUser.full_name : 'Select user'}
+                <span className="text-[12px] font-medium max-w-[100px] overflow-hidden text-ellipsis whitespace-nowrap text-[var(--color-text-2)]">
+                  {currentUser ? currentUser.full_name : 'Sign in'}
                 </span>
               </button>
             )}
@@ -332,10 +353,10 @@ export default function KanbanBoard() {
 
       {/* ── Error banner ── */}
       {error && (
-        <div className="flex items-center justify-between gap-3 px-6 py-2.5 bg-[var(--color-danger-light)] text-[var(--color-danger)] border-b border-red-300 text-sm">
+        <div className="flex items-center justify-between gap-3 px-6 py-2.5 bg-[var(--color-danger-light)] text-[var(--color-danger)] border-b border-[var(--color-border)] text-[13px]">
           <span>{error}</span>
           <button
-            className="bg-none border-none cursor-pointer text-sm text-[var(--color-primary)] hover:text-[var(--color-primary-hover)]"
+            className="bg-transparent border-none cursor-pointer text-[13px] font-medium text-[var(--color-danger)] underline hover:no-underline"
             onClick={() => { setError(''); fetchAll(search); }}
           >
             Retry
@@ -350,7 +371,7 @@ export default function KanbanBoard() {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <main className="flex gap-4 px-6 py-5 overflow-x-auto flex-1 items-start board-scroll">
+        <main className="flex gap-5 px-6 py-5 overflow-x-auto flex-1 items-start">
           {COLUMNS.map((col) => (
             <KanbanColumn
               key={col.status}
@@ -368,7 +389,7 @@ export default function KanbanBoard() {
           ))}
         </main>
 
-        <DragOverlay dropAnimation={{ duration: 200, easing: 'ease' }}>
+        <DragOverlay dropAnimation={{ duration: 180, easing: 'ease' }}>
           {activeTask ? <TaskCardOverlay task={activeTask} /> : null}
         </DragOverlay>
       </DndContext>

@@ -32,7 +32,7 @@ function AvatarSmall({ user }: { user: UserResponse | null }) {
   }
   return (
     <span
-      className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-primary-light text-(--color-primary) text-[10px] font-bold shrink-0"
+      className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-(--color-surface-3) text-text-2 text-[10px] font-semibold shrink-0"
       title={user.full_name}
     >
       {getInitials(user.full_name)}
@@ -151,10 +151,10 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
 
   return (
     <div className="relative" ref={containerRef}>
-      {label && <label className="block text-xs font-semibold text-text-2 mb-1">{label}</label>}
+      {label && <label className="block text-[11px] font-medium text-text-3 mb-1.5">{label}</label>}
       <button
         type="button"
-        className="flex items-center gap-2 w-full px-2.5 py-2 border-[1.5px] border-border rounded-lg bg-white cursor-pointer text-left hover:border-(--color-border-focus) transition-colors"
+        className="flex items-center gap-2 w-full px-2.5 py-2 border border-border rounded-lg bg-white cursor-pointer text-left hover:border-(--color-border-focus) transition-colors"
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -170,7 +170,7 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
 
       {open && (
         <div
-          className="absolute top-[calc(100%+4px)] left-0 right-0 bg-white border-[1.5px] border-border rounded-xl shadow-lg z-200 overflow-hidden"
+          className="absolute top-[calc(100%+4px)] left-0 right-0 bg-white border border-border rounded-xl shadow-lg shadow-black/5 z-200 overflow-hidden"
           role="listbox"
         >
           {!showCreate ? (
@@ -182,7 +182,7 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
                   placeholder="Search users…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg bg-white outline-none placeholder:text-text-3"
+                  className="w-full px-2.5 py-1.5 text-sm border border-border focus:border-(--color-border-focus) rounded-lg bg-white outline-none placeholder:text-text-3"
                 />
               </div>
 
@@ -205,7 +205,7 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
                       type="button"
                       className={`flex items-center gap-2 w-full px-2.5 py-1.5 text-left border-none rounded-lg cursor-pointer transition-colors text-sm ${
                         value === u.id
-                          ? 'bg-primary-light text-(--color-primary)'
+                          ? 'bg-surface-2 text-text-1'
                           : 'bg-transparent hover:bg-surface-2 text-text-1'
                       }`}
                       onClick={() => handleSelect(u.id)}
@@ -229,7 +229,7 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
               <div className="px-2 py-1.5 border-t border-border">
                 <button
                   type="button"
-                  className="w-full px-2.5 py-1.5 text-xs font-semibold text-(--color-primary) hover:bg-primary-light rounded-lg transition-colors text-left"
+                  className="w-full px-2.5 py-1.5 text-xs font-medium text-text-2 hover:bg-surface-2 rounded-lg transition-colors text-left"
                   onClick={() => setShowCreate(true)}
                 >
                   + Create new user
@@ -247,7 +247,7 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
                 >
                   ←
                 </button>
-                <span className="text-sm font-semibold text-text-1">New User</span>
+                <span className="text-[13px] font-semibold text-(--color-text-1)">New User</span>
               </div>
               {createError && (
                 <div className="px-2.5 py-1.5 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700">
@@ -260,7 +260,7 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
                 placeholder="Full name *"
                 value={createForm.full_name}
                 onChange={(e) => setCreateForm((f: CreateUserPayload) => ({ ...f, full_name: e.target.value }))}
-                className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg bg-white outline-none placeholder:text-text-3"
+                className="field-input text-sm"
                 minLength={1}
                 maxLength={100}
               />
@@ -270,7 +270,7 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
                 placeholder="Username * (letters, numbers, _ . -)"
                 value={createForm.username}
                 onChange={(e) => setCreateForm((f: CreateUserPayload) => ({ ...f, username: e.target.value }))}
-                className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg bg-white outline-none placeholder:text-text-3"
+                className="field-input text-sm"
                 minLength={3}
                 maxLength={50}
                 pattern="^[a-zA-Z0-9_.\-]+"
@@ -281,19 +281,19 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
                 placeholder="Email *"
                 value={createForm.email}
                 onChange={(e) => setCreateForm((f: CreateUserPayload) => ({ ...f, email: e.target.value }))}
-                className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg bg-white outline-none placeholder:text-text-3"
+                className="field-input text-sm"
               />
               <input
                 type="url"
                 placeholder="Avatar URL (optional)"
                 value={createForm.avatar_url ?? ''}
                 onChange={(e) => setCreateForm((f: CreateUserPayload) => ({ ...f, avatar_url: e.target.value }))}
-                className="w-full px-2.5 py-1.5 text-sm border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg bg-white outline-none placeholder:text-text-3"
+                className="field-input text-sm"
                 maxLength={500}
               />
               <button
                 type="submit"
-                className="px-3 py-1.5 rounded-lg text-sm font-semibold bg-(--color-primary) text-white hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1.5 rounded-lg text-sm font-medium bg-(--color-text-1) text-white hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={creating}
               >
                 {creating ? 'Creating…' : 'Create User'}

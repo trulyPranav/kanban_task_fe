@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { api, ApiError } from '../api';
 import type {
   TaskResponse,
@@ -33,17 +33,8 @@ const PRIORITY_OPTIONS: { value: TaskPriority; label: string }[] = [
   { value: 'high', label: 'High' },
 ];
 
-function PriorityDot({ priority }: { priority: TaskPriority }) {
-  const colors: Record<TaskPriority, string> = {
-    low:    'bg-[var(--color-prio-low)]',
-    medium: 'bg-[var(--color-prio-med)]',
-    high:   'bg-[var(--color-prio-high)]',
-  };
-  return <span className={`w-2 h-2 rounded-full shrink-0 ${colors[priority]}`} />;
-}
-
 function formatDate(iso: string | null): string {
-  if (!iso) return '—';
+  if (!iso) return 'â€”';
   return new Date(iso).toLocaleDateString(undefined, {
     year: 'numeric',
     month: 'short',
@@ -98,7 +89,7 @@ export default function TaskModal({
     if (mode === 'view') refreshTask();
   }, [mode, refreshTask]);
 
-  // Sync form state when switching from view → edit
+  // Sync form state when switching from view â†’ edit
   useEffect(() => {
     if (mode === 'edit' && task) {
       setTitle(task.title);
@@ -157,74 +148,73 @@ export default function TaskModal({
     if (e.target === e.currentTarget) onClose();
   };
 
+  // Shared icon button style
+  const iconBtn = "w-7 h-7 inline-flex items-center justify-center rounded-lg text-text-3 bg-transparent border-none cursor-pointer hover:bg-(--color-surface-2) hover:text-(--color-text-1) transition-colors";
+
   return (
     <div
-      className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-1000 p-5 animate-backdrop"
+      className="fixed inset-0 bg-black/30 backdrop-blur-[2px] flex items-center justify-center z-1000 p-4 animate-backdrop"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal
     >
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[calc(100vh-40px)] flex flex-col animate-modal overflow-hidden">
-        {/* ── Header ── */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border gap-3 shrink-0">
+      <div className="bg-white rounded-2xl shadow-xl shadow-black/10 w-full max-w-155 max-h-[calc(100vh-32px)] flex flex-col animate-modal overflow-hidden border border-(--color-border)">
+
+        {/* â”€â”€ Header â”€â”€ */}
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-(--color-border) gap-3 shrink-0">
           {mode === 'view' && task ? (
             <>
-              <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                <PriorityDot priority={task.priority} />
-                <h2 className="text-base font-bold text-text-1 whitespace-nowrap overflow-hidden text-ellipsis">{task.title}</h2>
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <span className={`w-2 h-2 rounded-full shrink-0 ${
+                  task.priority === 'high' ? 'bg-(--color-prio-high)' :
+                  task.priority === 'medium' ? 'bg-prio-med' : 'bg-(--color-prio-low)'
+                }`} />
+                <h2 className="text-[15px] font-semibold text-(--color-text-1) truncate">{task.title}</h2>
               </div>
-              <div className="flex items-center gap-1.5 shrink-0">
+              <div className="flex items-center gap-1 shrink-0">
                 <button
-                  className="inline-flex items-center justify-center px-3 py-1.5 rounded-lg border-[1.5px] border-border bg-transparent text-text-2 text-xs font-semibold cursor-pointer hover:bg-surface-2 hover:text-text-1 transition-all disabled:opacity-55"
+                  className="h-7 px-3 inline-flex items-center justify-center rounded-lg border border-(--color-border) bg-transparent text-text-2 text-[12px] font-medium cursor-pointer hover:bg-(--color-surface-2) transition-colors"
                   onClick={() => setMode('edit')}
                 >
                   Edit
                 </button>
                 <button
-                  className="inline-flex items-center justify-center px-3 py-1.5 rounded-lg border-[1.5px] border-red-300 bg-transparent text-(--color-danger) text-xs font-semibold cursor-pointer hover:bg-(--color-danger-light) transition-all disabled:opacity-55"
+                  className="h-7 px-3 inline-flex items-center justify-center rounded-lg border border-(--color-border) bg-transparent text-(--color-danger) text-[12px] font-medium cursor-pointer hover:bg-(--color-danger-light) transition-colors disabled:opacity-50"
                   onClick={handleDelete}
                   disabled={deleting}
                 >
-                  {deleting ? '…' : 'Delete'}
+                  {deleting ? 'â€¦' : 'Delete'}
                 </button>
-                <button
-                  className="w-7 h-7 inline-flex items-center justify-center rounded text-text-2 bg-transparent border-none cursor-pointer hover:bg-surface-2 transition-colors"
-                  onClick={onClose}
-                  aria-label="Close"
-                >
-                  ✕
+                <button className={iconBtn} onClick={onClose} aria-label="Close">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
                 </button>
               </div>
             </>
           ) : (
             <>
-              <h2 className="text-base font-bold text-text-1">{isCreating ? 'New Task' : 'Edit Task'}</h2>
-              <button
-                className="w-7 h-7 inline-flex items-center justify-center rounded text-text-2 bg-transparent border-none cursor-pointer hover:bg-surface-2 transition-colors"
-                onClick={onClose}
-                aria-label="Close"
-              >
-                ✕
+              <h2 className="text-[15px] font-semibold text-(--color-text-1)">{isCreating ? 'New task' : 'Edit task'}</h2>
+              <button className={iconBtn} onClick={onClose} aria-label="Close">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
               </button>
             </>
           )}
         </div>
 
+        {/* Error */}
         {error && (
-          <div className="mx-5 mt-3 px-3.5 py-2.5 rounded-lg text-[13px] border border-red-300 bg-(--color-danger-light) text-(--color-danger)">
+          <div className="mx-5 mt-3 px-3 py-2 rounded-lg text-[12px] border border-(--color-border) bg-(--color-danger-light) text-(--color-danger)">
             {error}
           </div>
         )}
 
-        {/* ── View mode ── */}
+        {/* â”€â”€ View mode â”€â”€ */}
         {mode === 'view' && task && (
-          <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-0">
-            {/* Meta grid */}
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-3 mb-5">
-              {/* Status */}
-              <div className="flex flex-col gap-1">
-                <span className="text-[11px] font-semibold text-text-3 uppercase tracking-widest">Status</span>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold self-start ${
+          <div className="flex-1 overflow-y-auto">
+            {/* Meta strip */}
+            <div className="px-5 py-4 grid grid-cols-3 gap-y-4 gap-x-6 border-b border-(--color-border)">
+              <div>
+                <p className="text-[10px] font-medium text-text-3 uppercase tracking-widest mb-1">Status</p>
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium ${
                   task.status === 'todo'        ? 'bg-status-todo-bg text-status-todo' :
                   task.status === 'in_progress' ? 'bg-status-progress-bg text-status-progress' :
                                                   'bg-status-done-bg text-status-done'
@@ -232,67 +222,66 @@ export default function TaskModal({
                   {STATUS_OPTIONS.find((s) => s.value === task.status)?.label}
                 </span>
               </div>
-              {/* Priority */}
-              <div className="flex flex-col gap-1">
-                <span className="text-[11px] font-semibold text-text-3 uppercase tracking-widest">Priority</span>
-                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold self-start ${
-                  task.priority === 'low'    ? 'bg-prio-low-bg text-prio-low-text' :
-                  task.priority === 'medium' ? 'bg-prio-med-bg text-prio-med-text' :
-                                               'bg-prio-high-bg text-prio-high-text'
+              <div>
+                <p className="text-[10px] font-medium text-text-3 uppercase tracking-widest mb-1">Priority</p>
+                <span className={`inline-flex items-center gap-1.5 text-[12px] font-medium ${
+                  task.priority === 'high' ? 'text-(--color-prio-high-text)' :
+                  task.priority === 'medium' ? 'text-prio-med-text' : 'text-prio-low-text'
                 }`}>
-                  <PriorityDot priority={task.priority} />
+                  <span className={`w-1.5 h-1.5 rounded-full ${
+                    task.priority === 'high' ? 'bg-(--color-prio-high)' :
+                    task.priority === 'medium' ? 'bg-prio-med' : 'bg-(--color-prio-low)'
+                  }`} />
                   {PRIORITY_OPTIONS.find((p) => p.value === task.priority)?.label}
                 </span>
               </div>
-              {/* Due Date */}
-              <div className="flex flex-col gap-1">
-                <span className="text-[11px] font-semibold text-text-3 uppercase tracking-widest">Due Date</span>
-                <span className="text-[13px] text-text-1">{formatDate(task.due_date)}</span>
+              <div>
+                <p className="text-[10px] font-medium text-text-3 uppercase tracking-widest mb-1">Due date</p>
+                <span className="text-[12px] text-(--color-text-1)">{formatDate(task.due_date)}</span>
               </div>
-              {/* Assignee */}
-              <div className="flex flex-col gap-1">
-                <span className="text-[11px] font-semibold text-text-3 uppercase tracking-widest">Assignee</span>
-                <span className="text-[13px] text-text-1">{task.assignee ? task.assignee.full_name : 'Unassigned'}</span>
+              <div>
+                <p className="text-[10px] font-medium text-text-3 uppercase tracking-widest mb-1">Assignee</p>
+                <span className="text-[12px] text-(--color-text-1)">{task.assignee ? task.assignee.full_name : 'â€”'}</span>
               </div>
-              {/* Created by */}
-              <div className="flex flex-col gap-1">
-                <span className="text-[11px] font-semibold text-text-3 uppercase tracking-widest">Created by</span>
-                <span className="text-[13px] text-text-1">{task.creator ? task.creator.full_name : '—'}</span>
+              <div>
+                <p className="text-[10px] font-medium text-text-3 uppercase tracking-widest mb-1">Created by</p>
+                <span className="text-[12px] text-(--color-text-1)">{task.creator ? task.creator.full_name : 'â€”'}</span>
               </div>
-              {/* Created */}
-              <div className="flex flex-col gap-1">
-                <span className="text-[11px] font-semibold text-text-3 uppercase tracking-widest">Created</span>
-                <span className="text-[13px] text-text-1">{formatDate(task.created_at)}</span>
+              <div>
+                <p className="text-[10px] font-medium text-text-3 uppercase tracking-widest mb-1">Created</p>
+                <span className="text-[12px] text-(--color-text-1)">{formatDate(task.created_at)}</span>
               </div>
             </div>
 
+            {/* Description */}
             {task.description && (
-              <div className="mb-5">
-                <h4 className="text-xs font-bold text-text-2 uppercase tracking-widest mb-2">Description</h4>
-                <p className="text-sm text-text-1 leading-relaxed whitespace-pre-wrap">{task.description}</p>
+              <div className="px-5 py-4 border-b border-(--color-border)">
+                <p className="text-[10px] font-medium text-text-3 uppercase tracking-widest mb-2">Description</p>
+                <p className="text-[13px] text-text-2 leading-relaxed whitespace-pre-wrap">{task.description}</p>
               </div>
             )}
 
-            <div className="h-px bg-border my-1 mb-5" />
-
-            <CommentSection
-              taskId={task.id}
-              currentUser={currentUser}
-              onCountChange={setCommentCount}
-            />
+            {/* Comments */}
+            <div className="px-5 py-4">
+              <CommentSection
+                taskId={task.id}
+                currentUser={currentUser}
+                onCountChange={setCommentCount}
+              />
+            </div>
           </div>
         )}
 
-        {/* ── Create / Edit form ── */}
+        {/* â”€â”€ Create / Edit form â”€â”€ */}
         {(mode === 'create' || mode === 'edit') && (
-          <form onSubmit={handleSave} className="flex-1 overflow-y-auto p-5 flex flex-col gap-3.5">
+          <form onSubmit={handleSave} className="flex-1 overflow-y-auto p-5 flex flex-col gap-4">
             {/* Title */}
-            <div className="flex flex-col gap-1">
-              <label className="block text-xs font-semibold text-text-2 mb-1" htmlFor="task-title">Title *</label>
+            <div>
+              <label className="block text-[11px] font-medium text-text-3 mb-1.5" htmlFor="task-title">Title *</label>
               <input
                 id="task-title"
                 type="text"
-                className="w-full px-3 py-2 border-[1.5px] border-border focus:border-(--color-border-focus) focus:shadow-[0_0_0_3px_rgba(99,102,241,0.12)] rounded-lg text-sm text-text-1 bg-white outline-none transition-all placeholder:text-text-3"
+                className="field-input"
                 placeholder="Task title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -304,27 +293,27 @@ export default function TaskModal({
             </div>
 
             {/* Description */}
-            <div className="flex flex-col gap-1">
-              <label className="block text-xs font-semibold text-text-2 mb-1" htmlFor="task-desc">Description</label>
+            <div>
+              <label className="block text-[11px] font-medium text-text-3 mb-1.5" htmlFor="task-desc">Description</label>
               <textarea
                 id="task-desc"
-                className="w-full px-3 py-2 border-[1.5px] border-border focus:border-(--color-border-focus) focus:shadow-[0_0_0_3px_rgba(99,102,241,0.12)] rounded-lg text-sm text-text-1 bg-white outline-none transition-all resize-y placeholder:text-text-3"
-                placeholder="Add a description…"
+                className="field-input resize-y"
+                placeholder="Add a descriptionâ€¦"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
                 maxLength={5000}
               />
-              <span className="text-[11px] text-text-3 text-right mt-0.5">{description.length}/5000</span>
+              <span className="block text-[10px] text-text-3 text-right mt-1 tabular-nums">{description.length}/5000</span>
             </div>
 
             {/* Status / Priority / Due */}
-            <div className="flex gap-3 flex-wrap items-start">
-              <div className="flex flex-col gap-1 flex-1">
-                <label className="block text-xs font-semibold text-text-2 mb-1" htmlFor="task-status">Status</label>
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <label className="block text-[11px] font-medium text-text-3 mb-1.5" htmlFor="task-status">Status</label>
                 <select
                   id="task-status"
-                  className="select-arrow w-full px-3 py-2 border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg text-sm text-text-1 bg-white outline-none cursor-pointer transition-all"
+                  className="select-arrow field-input"
                   value={status}
                   onChange={(e) => setStatus(e.target.value as TaskStatus)}
                 >
@@ -333,12 +322,11 @@ export default function TaskModal({
                   ))}
                 </select>
               </div>
-
-              <div className="flex flex-col gap-1 flex-1">
-                <label className="block text-xs font-semibold text-text-2 mb-1" htmlFor="task-priority">Priority</label>
+              <div>
+                <label className="block text-[11px] font-medium text-text-3 mb-1.5" htmlFor="task-priority">Priority</label>
                 <select
                   id="task-priority"
-                  className="select-arrow w-full px-3 py-2 border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg text-sm text-text-1 bg-white outline-none cursor-pointer transition-all"
+                  className="select-arrow field-input"
                   value={priority}
                   onChange={(e) => setPriority(e.target.value as TaskPriority)}
                 >
@@ -347,13 +335,12 @@ export default function TaskModal({
                   ))}
                 </select>
               </div>
-
-              <div className="flex flex-col gap-1 flex-1">
-                <label className="block text-xs font-semibold text-text-2 mb-1" htmlFor="task-due">Due Date</label>
+              <div>
+                <label className="block text-[11px] font-medium text-text-3 mb-1.5" htmlFor="task-due">Due date</label>
                 <input
                   id="task-due"
                   type="date"
-                  className="w-full px-3 py-2 border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg text-sm text-text-1 bg-white outline-none transition-all"
+                  className="field-input"
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}
                 />
@@ -378,11 +365,12 @@ export default function TaskModal({
               )}
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-1">
+            {/* Form footer */}
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-(--color-border) mt-auto">
               {mode === 'edit' && (
                 <button
                   type="button"
-                  className="inline-flex items-center justify-center px-4 py-2 rounded-lg border-[1.5px] border-border bg-transparent text-text-2 text-[13px] font-semibold cursor-pointer hover:bg-surface-2 transition-all"
+                  className="h-8 px-4 inline-flex items-center justify-center rounded-lg border border-(--color-border) bg-transparent text-text-2 text-[12px] font-medium cursor-pointer hover:bg-(--color-surface-2) transition-colors"
                   onClick={() => setMode('view')}
                 >
                   Cancel
@@ -390,22 +378,24 @@ export default function TaskModal({
               )}
               <button
                 type="submit"
-                className="inline-flex items-center justify-center px-4 py-2 rounded-lg border-[1.5px] border-(--color-primary) bg-(--color-primary) text-white text-[13px] font-semibold cursor-pointer hover:bg-primary-hover transition-all disabled:opacity-55 disabled:cursor-not-allowed"
+                className="h-8 px-4 inline-flex items-center justify-center rounded-lg bg-(--color-text-1) text-white text-[12px] font-medium cursor-pointer hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={saving}
               >
-                {saving ? 'Saving…' : isCreating ? 'Create Task' : 'Save Changes'}
+                {saving ? 'Savingâ€¦' : isCreating ? 'Create task' : 'Save changes'}
               </button>
             </div>
           </form>
         )}
 
-        {/* comment count chip */}
+        {/* Comment count footer (view mode only) */}
         {mode === 'view' && task && (
-          <div className="px-5 py-2.5 border-t border-border text-xs text-text-3 shrink-0">
-            💬 {commentCount} comment{commentCount !== 1 ? 's' : ''}
+          <div className="px-5 py-2.5 border-t border-(--color-border) text-[11px] text-text-3 shrink-0 flex items-center gap-1.5">
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M2 2h12v9H9l-3 3v-3H2V2z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/></svg>
+            {commentCount} comment{commentCount !== 1 ? 's' : ''}
           </div>
         )}
       </div>
     </div>
   );
 }
+

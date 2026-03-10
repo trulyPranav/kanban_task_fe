@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+﻿import { useState, useEffect, useCallback, useRef } from 'react';
 import { api, ApiError } from '../api';
 import type { CommentResponse, UserResponse } from '../types';
 
@@ -140,55 +140,55 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Title */}
-      <h4 className="flex items-center text-xs font-bold text-text-2 uppercase tracking-widest">
-        Comments
+      {/* Section heading */}
+      <div className="flex items-center gap-2">
+        <h4 className="text-[11px] font-medium text-text-3 uppercase tracking-widest">Comments</h4>
         {comments.length > 0 && (
-          <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full text-[11px] font-bold bg-primary-light text-(--color-primary) ml-1.5">
+          <span className="text-[10px] font-medium text-text-3 tabular-nums">
             {comments.length}
           </span>
         )}
-      </h4>
+      </div>
 
       {error && (
-        <div className="px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+        <div className="px-3 py-2 rounded-lg bg-(--color-danger-light) border border-(--color-border) text-[12px] text-(--color-danger)">
           {error}
         </div>
       )}
 
       {loading ? (
-        <div className="w-6 h-6 rounded-full border-[2.5px] border-border border-t-(--color-primary) animate-spin-fast mx-auto my-4" />
+        <div className="w-4 h-4 rounded-full border-[1.5px] border-(--color-border) border-t-(--color-accent) animate-spin-fast mx-auto my-3" />
       ) : comments.length === 0 ? (
-        <p className="text-sm text-text-3 py-2">No comments yet. Be the first!</p>
+        <p className="text-[12px] text-text-3 py-1">No comments yet.</p>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           {comments.map((c) => (
-            <div key={c.id} className="flex gap-2.5">
+            <div key={c.id} className="flex gap-3">
               {/* Avatar */}
-              <div className="shrink-0">
+              <div className="shrink-0 mt-0.5">
                 {c.author?.avatar_url ? (
                   <img
                     src={c.author.avatar_url}
                     alt={c.author.full_name}
-                    className="w-7 h-7 rounded-full object-cover"
+                    className="w-6 h-6 rounded-full object-cover"
                   />
                 ) : (
-                  <span className="w-7 h-7 rounded-full inline-flex items-center justify-center bg-primary-light text-(--color-primary) text-[10px] font-bold">
+                  <span className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-(--color-surface-3) text-text-2 text-[9px] font-semibold">
                     {c.author ? getInitials(c.author.full_name) : '?'}
                   </span>
                 )}
               </div>
               {/* Body */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                  <span className="text-xs font-semibold text-text-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[12px] font-medium text-(--color-text-1)">
                     {c.author?.full_name ?? 'Deleted user'}
                   </span>
                   <span className="text-[11px] text-text-3">{formatTime(c.created_at)}</span>
                   {currentUser && c.user_id === currentUser.id && (
-                    <div className="flex items-center gap-1 ml-auto">
+                    <div className="flex items-center gap-2 ml-auto">
                       <button
-                        className="bg-transparent border-none cursor-pointer text-[11px] text-(--color-primary) hover:text-primary-hover p-0"
+                        className="bg-transparent border-none cursor-pointer text-[11px] text-text-3 hover:text-(--color-text-1) transition-colors p-0"
                         onClick={() => {
                           setEditingId(c.id);
                           setEditContent(c.content);
@@ -197,7 +197,7 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
                         Edit
                       </button>
                       <button
-                        className="bg-transparent border-none cursor-pointer text-[11px] text-red-500 hover:text-red-700 p-0"
+                        className="bg-transparent border-none cursor-pointer text-[11px] text-text-3 hover:text-(--color-danger) transition-colors p-0"
                         onClick={() => handleDelete(c.id)}
                       >
                         Delete
@@ -206,23 +206,23 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
                   )}
                 </div>
                 {editingId === c.id ? (
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-2">
                     <textarea
-                      className="w-full px-3 py-2 border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg text-sm bg-white outline-none resize-y placeholder:text-text-3"
+                      className="field-input resize-y"
                       value={editContent}
                       onChange={(e) => setEditContent(e.target.value)}
                       rows={3}
                       maxLength={2000}
                     />
-                    <div className="flex gap-1.5">
+                    <div className="flex gap-2">
                       <button
-                        className="px-3 py-1 rounded-lg text-xs font-semibold bg-(--color-primary) text-white hover:bg-primary-hover transition-colors"
+                        className="h-7 px-3 inline-flex items-center justify-center rounded-lg bg-(--color-text-1) text-white text-[11px] font-medium hover:bg-primary-hover transition-colors cursor-pointer"
                         onClick={() => handleEditSave(c.id)}
                       >
                         Save
                       </button>
                       <button
-                        className="px-3 py-1 rounded-lg text-xs font-semibold border border-border text-text-2 hover:bg-surface-2 transition-colors"
+                        className="h-7 px-3 inline-flex items-center justify-center rounded-lg border border-(--color-border) text-text-2 text-[11px] font-medium hover:bg-(--color-surface-2) transition-colors cursor-pointer bg-transparent"
                         onClick={() => setEditingId(null)}
                       >
                         Cancel
@@ -230,35 +230,35 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
                     </div>
                   </div>
                 ) : (
-                  <p className="text-sm text-text-1 whitespace-pre-wrap wrap-break-word">{c.content}</p>
+                  <p className="text-[13px] text-text-2 whitespace-pre-wrap wrap-break-word leading-relaxed">{c.content}</p>
                 )}
               </div>
             </div>
           ))}
           {loadingMore && (
-            <div className="flex justify-center py-2">
-              <div className="w-5 h-5 rounded-full border-[2.5px] border-border border-t-(--color-primary) animate-spin-fast" />
+            <div className="flex justify-center py-1">
+              <div className="w-4 h-4 rounded-full border-[1.5px] border-(--color-border) border-t-(--color-accent) animate-spin-fast" />
             </div>
           )}
           {hasMore && <div ref={sentinelRef} className="h-px" />}
         </div>
       )}
 
-      {/* New comment form */}
-      <form onSubmit={handleSubmit} className="flex gap-2.5 pt-1">
-        <div className="shrink-0">
+      {/* New comment */}
+      <form onSubmit={handleSubmit} className="flex gap-2.5 pt-1 border-t border-(--color-border)">
+        <div className="shrink-0 mt-2">
           {currentUser?.avatar_url ? (
-            <img src={currentUser.avatar_url} alt={currentUser.full_name} className="w-7 h-7 rounded-full object-cover" />
+            <img src={currentUser.avatar_url} alt={currentUser.full_name} className="w-6 h-6 rounded-full object-cover" />
           ) : (
-            <span className="w-7 h-7 rounded-full inline-flex items-center justify-center bg-primary-light text-(--color-primary) text-[10px] font-bold">
+            <span className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-(--color-surface-3) text-text-2 text-[9px] font-semibold">
               {currentUser ? getInitials(currentUser.full_name) : '?'}
             </span>
           )}
         </div>
-        <div className="flex-1 flex flex-col gap-1.5">
+        <div className="flex-1 flex flex-col gap-1.5 pt-1">
           <textarea
-            className="w-full px-3 py-2 border-[1.5px] border-border focus:border-(--color-border-focus) rounded-lg text-sm bg-white outline-none resize-y placeholder:text-text-3 disabled:opacity-60"
-            placeholder={currentUser ? 'Write a comment…' : 'Select a user to comment'}
+            className="field-input resize-y disabled:opacity-50"
+            placeholder={currentUser ? 'Add a commentâ€¦' : 'Select a user to comment'}
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
             rows={2}
@@ -266,13 +266,13 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
             disabled={!currentUser}
           />
           <div className="flex items-center justify-between">
-            <span className="text-[11px] text-text-3">{newContent.length}/2000</span>
+            <span className="text-[10px] text-text-3 tabular-nums">{newContent.length}/2000</span>
             <button
               type="submit"
-              className="px-3 py-1 rounded-lg text-xs font-semibold bg-(--color-primary) text-white hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-7 px-3 inline-flex items-center justify-center rounded-lg bg-(--color-text-1) text-white text-[11px] font-medium hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               disabled={submitting || !newContent.trim() || !currentUser}
             >
-              {submitting ? 'Posting…' : 'Comment'}
+              {submitting ? 'Postingâ€¦' : 'Comment'}
             </button>
           </div>
         </div>
@@ -280,3 +280,4 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
     </div>
   );
 }
+
