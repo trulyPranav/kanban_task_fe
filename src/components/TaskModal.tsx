@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { api, ApiError } from '../api';
 import type {
   TaskResponse,
@@ -34,7 +34,7 @@ const PRIORITY_OPTIONS: { value: TaskPriority; label: string }[] = [
 ];
 
 function formatDate(iso: string | null): string {
-  if (!iso) return 'â€”';
+  if (!iso) return '—';
   return new Date(iso).toLocaleDateString(undefined, {
     year: 'numeric',
     month: 'short',
@@ -160,7 +160,7 @@ export default function TaskModal({
     >
       <div className="bg-white rounded-2xl shadow-xl shadow-black/10 w-full max-w-155 max-h-[calc(100vh-32px)] flex flex-col animate-modal overflow-hidden border border-(--color-border)">
 
-        {/* â”€â”€ Header â”€â”€ */}
+        {/* ── Header ── */}
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-(--color-border) gap-3 shrink-0">
           {mode === 'view' && task ? (
             <>
@@ -183,7 +183,7 @@ export default function TaskModal({
                   onClick={handleDelete}
                   disabled={deleting}
                 >
-                  {deleting ? 'â€¦' : 'Delete'}
+                  {deleting ? '…' : 'Delete'}
                 </button>
                 <button className={iconBtn} onClick={onClose} aria-label="Close">
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
@@ -207,7 +207,7 @@ export default function TaskModal({
           </div>
         )}
 
-        {/* â”€â”€ View mode â”€â”€ */}
+        {/* ── View mode ── */}
         {mode === 'view' && task && (
           <div className="flex-1 overflow-y-auto">
             {/* Meta strip */}
@@ -241,11 +241,11 @@ export default function TaskModal({
               </div>
               <div>
                 <p className="text-[10px] font-medium text-text-3 uppercase tracking-widest mb-1">Assignee</p>
-                <span className="text-[12px] text-(--color-text-1)">{task.assignee ? task.assignee.full_name : 'â€”'}</span>
+                <span className="text-[12px] text-(--color-text-1)">{task.assignee ? task.assignee.full_name : '—'}</span>
               </div>
               <div>
                 <p className="text-[10px] font-medium text-text-3 uppercase tracking-widest mb-1">Created by</p>
-                <span className="text-[12px] text-(--color-text-1)">{task.creator ? task.creator.full_name : 'â€”'}</span>
+                <span className="text-[12px] text-(--color-text-1)">{task.creator ? task.creator.full_name : '—'}</span>
               </div>
               <div>
                 <p className="text-[10px] font-medium text-text-3 uppercase tracking-widest mb-1">Created</p>
@@ -272,7 +272,7 @@ export default function TaskModal({
           </div>
         )}
 
-        {/* â”€â”€ Create / Edit form â”€â”€ */}
+        {/* ── Create / Edit form ── */}
         {(mode === 'create' || mode === 'edit') && (
           <form onSubmit={handleSave} className="flex-1 overflow-y-auto p-5 flex flex-col gap-4">
             {/* Title */}
@@ -298,7 +298,7 @@ export default function TaskModal({
               <textarea
                 id="task-desc"
                 className="field-input resize-y"
-                placeholder="Add a descriptionâ€¦"
+                placeholder="Add a description…"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
@@ -381,7 +381,7 @@ export default function TaskModal({
                 className="h-8 px-4 inline-flex items-center justify-center rounded-lg bg-(--color-text-1) text-white text-[12px] font-medium cursor-pointer hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={saving}
               >
-                {saving ? 'Savingâ€¦' : isCreating ? 'Create task' : 'Save changes'}
+                {saving ? 'Saving…' : isCreating ? 'Create task' : 'Save changes'}
               </button>
             </div>
           </form>

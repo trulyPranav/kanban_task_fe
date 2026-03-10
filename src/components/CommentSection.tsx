@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { api, ApiError } from '../api';
 import type { CommentResponse, UserResponse } from '../types';
 
@@ -258,7 +258,7 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
         <div className="flex-1 flex flex-col gap-1.5 pt-1">
           <textarea
             className="field-input resize-y disabled:opacity-50"
-            placeholder={currentUser ? 'Add a commentâ€¦' : 'Select a user to comment'}
+            placeholder={currentUser ? 'Add a comment…' : 'Select a user to comment'}
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
             rows={2}
@@ -272,7 +272,7 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
               className="h-7 px-3 inline-flex items-center justify-center rounded-lg bg-(--color-text-1) text-white text-[11px] font-medium hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               disabled={submitting || !newContent.trim() || !currentUser}
             >
-              {submitting ? 'Postingâ€¦' : 'Comment'}
+              {submitting ? 'Posting…' : 'Comment'}
             </button>
           </div>
         </div>
