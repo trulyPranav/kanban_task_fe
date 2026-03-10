@@ -1,6 +1,8 @@
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import type { TaskResponse, TaskPriority } from '../types';
+import { formatDueDate } from '@/lib/utils';
+import Avatar from '@/components/ui/Avatar';
+import type { TaskResponse, TaskPriority } from '@/types';
 
 interface TaskCardProps {
   task: TaskResponse;
@@ -25,31 +27,6 @@ const PRIORITY_TEXT: Record<TaskPriority, string> = {
   medium: 'text-prio-med-text',
   high:   'text-(--color-prio-high-text)',
 };
-
-function getInitials(name: string): string {
-  return name
-    .split(' ')
-    .map((w) => w[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-}
-
-function formatDueDate(iso: string | null): { text: string; overdue: boolean } | null {
-  if (!iso) return null;
-  const due = new Date(iso);
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  due.setHours(0, 0, 0, 0);
-  const diffDays = Math.round((due.getTime() - now.getTime()) / 86400000);
-  if (diffDays < 0) return { text: 'Overdue', overdue: true };
-  if (diffDays === 0) return { text: 'Today', overdue: false };
-  if (diffDays === 1) return { text: 'Tomorrow', overdue: false };
-  return {
-    text: new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
-    overdue: false,
-  };
-}
 
 function CardContent({ task }: { task: TaskResponse }) {
   const dueInfo = formatDueDate(task.due_date);
@@ -83,17 +60,7 @@ function CardContent({ task }: { task: TaskResponse }) {
         <div className="flex items-center gap-1.5 min-w-0">
           {task.assignee ? (
             <>
-              {task.assignee.avatar_url ? (
-                <img
-                  src={task.assignee.avatar_url}
-                  alt={task.assignee.full_name}
-                  className="w-5 h-5 rounded-full object-cover shrink-0"
-                />
-              ) : (
-                <span className="w-5 h-5 rounded-full inline-flex items-center justify-center bg-(--color-surface-3) text-text-2 text-[9px] font-semibold shrink-0">
-                  {getInitials(task.assignee.full_name)}
-                </span>
-              )}
+              <Avatar size="xs" name={task.assignee.full_name} avatarUrl={task.assignee.avatar_url} />
               <span className="text-[11px] text-text-3 whitespace-nowrap overflow-hidden text-ellipsis max-w-22.5">{task.assignee.full_name}</span>
             </>
           ) : (

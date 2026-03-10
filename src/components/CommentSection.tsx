@@ -1,39 +1,21 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { api, ApiError } from '../api';
-import type { CommentResponse, UserResponse } from '../types';
+import { api, ApiError } from '@/api';
+import { useCurrentUser } from '@/contexts/CurrentUserContext';
+import { formatTime } from '@/lib/utils';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import Avatar from '@/components/ui/Avatar';
+import Spinner from '@/components/ui/Spinner';
+import type { CommentResponse } from '@/types';
 
 interface CommentSectionProps {
   taskId: string;
-  currentUser: UserResponse | null;
   onCountChange?: (count: number) => void;
-}
-
-function formatTime(iso: string): string {
-  const date = new Date(iso);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  if (diffMins < 1) return 'just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 7) return `${diffDays}d ago`;
-  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
-function getInitials(name: string): string {
-  return name
-    .split(' ')
-    .map((w) => w[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
 }
 
 const PAGE_SIZE = 20;
 
-export default function CommentSection({ taskId, currentUser, onCountChange }: CommentSectionProps) {
+export default function CommentSection({ taskId, onCountChange }: CommentSectionProps) {
+  const { currentUser } = useCurrentUser();
   const [comments, setComments] = useState<CommentResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -86,16 +68,7 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
     }
   }, [taskId, onCountChange]);
 
-  useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el || !hasMore) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) loadMore(); },
-      { threshold: 0 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [hasMore, loadMore]);
+  useInfiniteScroll(sentinelRef, loadMore, hasMore, '0px');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -157,7 +130,7 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
       )}
 
       {loading ? (
-        <div className="w-4 h-4 rounded-full border-[1.5px] border-(--color-border) border-t-(--color-accent) animate-spin-fast mx-auto my-3" />
+        <Spinner size="sm" className="mx-auto my-3" />
       ) : comments.length === 0 ? (
         <p className="text-[12px] text-text-3 py-1">No comments yet.</p>
       ) : (
@@ -166,17 +139,7 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
             <div key={c.id} className="flex gap-3">
               {/* Avatar */}
               <div className="shrink-0 mt-0.5">
-                {c.author?.avatar_url ? (
-                  <img
-                    src={c.author.avatar_url}
-                    alt={c.author.full_name}
-                    className="w-6 h-6 rounded-full object-cover"
-                  />
-                ) : (
-                  <span className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-(--color-surface-3) text-text-2 text-[9px] font-semibold">
-                    {c.author ? getInitials(c.author.full_name) : '?'}
-                  </span>
-                )}
+                <Avatar name={c.author?.full_name} avatarUrl={c.author?.avatar_url} size="sm" />
               </div>
               {/* Body */}
               <div className="flex-1 min-w-0">
@@ -235,11 +198,7 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
               </div>
             </div>
           ))}
-          {loadingMore && (
-            <div className="flex justify-center py-1">
-              <div className="w-4 h-4 rounded-full border-[1.5px] border-(--color-border) border-t-(--color-accent) animate-spin-fast" />
-            </div>
-          )}
+          {loadingMore && <Spinner size="sm" className="mx-auto" />}
           {hasMore && <div ref={sentinelRef} className="h-px" />}
         </div>
       )}
@@ -247,13 +206,7 @@ export default function CommentSection({ taskId, currentUser, onCountChange }: C
       {/* New comment */}
       <form onSubmit={handleSubmit} className="flex gap-2.5 pt-1 border-t border-(--color-border)">
         <div className="shrink-0 mt-2">
-          {currentUser?.avatar_url ? (
-            <img src={currentUser.avatar_url} alt={currentUser.full_name} className="w-6 h-6 rounded-full object-cover" />
-          ) : (
-            <span className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-(--color-surface-3) text-text-2 text-[9px] font-semibold">
-              {currentUser ? getInitials(currentUser.full_name) : '?'}
-            </span>
-          )}
+          <Avatar name={currentUser?.full_name} avatarUrl={currentUser?.avatar_url} size="sm" />
         </div>
         <div className="flex-1 flex flex-col gap-1.5 pt-1">
           <textarea

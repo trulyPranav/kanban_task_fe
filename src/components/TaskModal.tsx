@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { api, ApiError } from '../api';
+import { api, ApiError } from '@/api';
+import { formatDate, toDateInputValue } from '@/lib/utils';
 import type {
   TaskResponse,
   TaskStatus,
@@ -7,9 +8,9 @@ import type {
   CreateTaskPayload,
   UpdateTaskPayload,
   UserResponse,
-} from '../types';
-import UserSelector from './UserSelector';
-import CommentSection from './CommentSection';
+} from '@/types';
+import UserSelector from '@/components/UserSelector';
+import CommentSection from '@/components/CommentSection';
 
 interface TaskModalProps {
   /** null = create mode */
@@ -32,20 +33,6 @@ const PRIORITY_OPTIONS: { value: TaskPriority; label: string }[] = [
   { value: 'medium', label: 'Medium' },
   { value: 'high', label: 'High' },
 ];
-
-function formatDate(iso: string | null): string {
-  if (!iso) return '—';
-  return new Date(iso).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
-
-function toDateInputValue(iso: string | null): string {
-  if (!iso) return '';
-  return iso.slice(0, 10);
-}
 
 export default function TaskModal({
   task,
@@ -265,7 +252,6 @@ export default function TaskModal({
             <div className="px-5 py-4">
               <CommentSection
                 taskId={task.id}
-                currentUser={currentUser}
                 onCountChange={setCommentCount}
               />
             </div>

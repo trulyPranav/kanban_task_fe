@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { api } from '../api';
-import type { UserResponse, CreateUserPayload } from '../types';
+import { api } from '@/api';
+import { useClickOutside } from '@/hooks/useClickOutside';
+import Avatar from '@/components/ui/Avatar';
+import type { UserResponse, CreateUserPayload } from '@/types';
 
 interface UserSelectorProps {
   value: string | null;
@@ -10,35 +12,6 @@ interface UserSelectorProps {
 }
 
 const PAGE_SIZE = 20;
-
-function getInitials(name: string): string {
-  return name
-    .split(' ')
-    .map((w) => w[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-}
-
-function AvatarSmall({ user }: { user: UserResponse | null }) {
-  if (!user)
-    return (
-      <span className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-surface-2 text-text-3 text-[11px]">
-        —
-      </span>
-    );
-  if (user.avatar_url) {
-    return <img src={user.avatar_url} alt={user.full_name} className="w-6 h-6 rounded-full object-cover" />;
-  }
-  return (
-    <span
-      className="w-6 h-6 rounded-full inline-flex items-center justify-center bg-(--color-surface-3) text-text-2 text-[10px] font-semibold shrink-0"
-      title={user.full_name}
-    >
-      {getInitials(user.full_name)}
-    </span>
-  );
-}
 
 export default function UserSelector({ value, onChange, placeholder = 'Unassigned', label }: UserSelectorProps) {
   const [open, setOpen] = useState(false);
@@ -108,17 +81,7 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
     return () => observer.disconnect();
   }, [hasMoreUsers, search, fetchUsers]);
 
-  // Close on outside click
-  useEffect(() => {
-    function handler(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-        setShowCreate(false);
-      }
-    }
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
+  useClickOutside(containerRef, () => { setOpen(false); setShowCreate(false); }, open);
 
   const handleSelect = (userId: string | null) => {
     onChange(userId);
@@ -159,7 +122,7 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <AvatarSmall user={selectedUser} />
+        <Avatar name={selectedUser?.full_name} avatarUrl={selectedUser?.avatar_url} size="sm" />
         <span className="flex-1 text-sm text-text-1 truncate">
           {selectedUser ? selectedUser.full_name : placeholder}
         </span>
@@ -210,7 +173,7 @@ export default function UserSelector({ value, onChange, placeholder = 'Unassigne
                       }`}
                       onClick={() => handleSelect(u.id)}
                     >
-                      <AvatarSmall user={u} />
+                      <Avatar name={u.full_name} avatarUrl={u.avatar_url} size="sm" />
                       <span className="flex-1 truncate font-medium">{u.full_name}</span>
                       <span className="text-[11px] text-text-3 shrink-0">@{u.username}</span>
                     </button>

@@ -1,7 +1,8 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import type { TaskResponse, TaskStatus } from '../types';
-import TaskCard from './TaskCard';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import type { TaskResponse, TaskStatus } from '@/types';
+import TaskCard from '@/components/TaskCard';
 
 interface KanbanColumnProps {
   status: TaskStatus;
@@ -37,16 +38,7 @@ export default function KanbanColumn({
   const { setNodeRef, isOver } = useDroppable({ id: status });
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el || !hasMore) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) onLoadMore(status); },
-      { threshold: 0, rootMargin: '80px' },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [hasMore, status, onLoadMore]);
+  useInfiniteScroll(sentinelRef, () => onLoadMore(status), hasMore, '80px');
 
   return (
     <div className="min-w-[292px] w-[292px] shrink-0 flex flex-col rounded-xl bg-[var(--color-surface-2)] border border-[var(--color-border)] max-h-[calc(100vh-88px)] overflow-hidden">
